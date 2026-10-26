@@ -1,3 +1,5 @@
+import json
+
 print("\n   SISTEMA DE VENDAS E ESTOQUE     ")
 
 produtos = []
@@ -54,6 +56,8 @@ def cadastrar_produto():
             }
 
             produtos.append(produto)
+
+            salvar_dados()
 
             print("\nProduto cadastrado com sucesso!")
             print(f"Nome: {produto['nome']}")
@@ -114,6 +118,8 @@ def registrar_venda():
 
                         vendas.append(venda)
 
+                        salvar_dados()
+
                         print("\nVenda realizada com sucesso! ")
                         print(f"Produto: {produto_encontrado['nome']}")
                         print(f"Quantidade vendida: {quantidade_venda}")
@@ -134,11 +140,39 @@ def consultar_historico():
             print(f"Nome: {venda['nome']}")
             print(f"Quantidade: {venda['quantidade']}")
             print(f"Total: R$ {venda['total']:.2f}\n")
-
-        totais = [venda["total"] for venda in vendas]
-        faturamento = sum(totais)
-
+            
+        faturamento = calcular_faturamento(vendas)
         print(f"\nFaturamento total das vendas: R$ {faturamento:.2f}\n")
+
+def calcular_faturamento(vendas):
+    totais = [venda["total"] for venda in vendas]
+    faturamento = sum(totais)
+    return faturamento
+    
+def salvar_dados():
+    dados = {
+        "produtos": produtos,
+        "vendas": vendas
+    }
+
+    with open("dados.json", "w", encoding="utf-8") as arquivo:
+        json.dump(dados, arquivo, ensure_ascii=False, indent=4)
+
+def carregar_dados():
+    global produtos, vendas
+
+    try:
+        with open("dados.json", "r", encoding="utf-8") as arquivo:
+            dados = json.load(arquivo)
+
+            produtos = dados["produtos"]
+            vendas = dados["vendas"]
+
+    except FileNotFoundError:
+        produtos = []
+        vendas = []
+
+carregar_dados()
 
 while x != 5:
     
