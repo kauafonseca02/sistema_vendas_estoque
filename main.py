@@ -172,6 +172,9 @@ def carregar_dados():
         produtos = []
         vendas = []
 
+    except json.JSONDecodeError:
+        print("Arquivo de dados inválido.")
+
 carregar_dados()
 
 while x != 5:
