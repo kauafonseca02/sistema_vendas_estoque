@@ -174,6 +174,8 @@ def carregar_dados():
 
     except json.JSONDecodeError:
         print("Arquivo de dados inválido.")
+        produtos = []
+        vendas = []
 
 carregar_dados()
 
